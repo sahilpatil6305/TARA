@@ -67,10 +67,11 @@ The system follows an iterative feedback loop:
 
 ## Repository Structure
 
-```
+```text
 .
 ├── .gitignore
 ├── README.md
+│
 ├── foeglass/                            # Baseline reproduction codebase
 │   ├── main.py                          # Main iterative optimization pipeline
 │   ├── train_detector.py                # Trains the MLP deepfake detector
@@ -78,6 +79,7 @@ The system follows an iterative feedback loop:
 │   ├── build_real_embeddings.py         # Extracts reference Wav2Vec embeddings
 │   ├── statistical_analysis.py          # Statistical hypothesis testing
 │   ├── requirements.txt                 # Baseline dependencies
+│   │
 │   ├── src/                             # Core modules
 │   │   ├── audio_features.py            # Acoustic prosody & feature extraction
 │   │   ├── compliance.py                # Dataset integrity verification
@@ -92,7 +94,8 @@ The system follows an iterative feedback loop:
 │   │   ├── prompt_generator.py          # Heuristic prompt generator
 │   │   ├── run_logging.py               # Structured logging & run artifacts
 │   │   └── tts_engine.py                # Text-to-speech synthesis wrapper
-│   └── reference output for limitations/# Sample baseline evaluation plots
+│   │
+│   └── reference output for limitations/ # Sample baseline evaluation plots
 │       ├── asr_success_by_iteration.png
 │       ├── classification_metrics.png
 │       ├── confusion_matrix.png
@@ -108,8 +111,10 @@ The system follows an iterative feedback loop:
 │   ├── config.py                        # Dataclass-based central configuration
 │   ├── requirements.txt                 # DRAO dependencies (Groq, Seaborn, etc.)
 │   ├── .env.example                     # Environment template for API keys
+│   │
 │   ├── data/                            # Machine-generated runtime artifacts
 │   │   └── README.md                    # Data directory documentation
+│   │
 │   ├── src/                             # DRAO modular components
 │   │   ├── detector.py                  # Wav2Vec2 + MLP classifier
 │   │   ├── embedding.py                 # Acoustic feature & embedding extractor
@@ -119,11 +124,11 @@ The system follows an iterative feedback loop:
 │   │   ├── pipeline.py                  # Main DRAO iterative search loop
 │   │   ├── smoothness.py                # Acoustic spectral smoothness metric
 │   │   └── tts_engine.py                # Coqui TTS wrapper with fallback
-│   └── output plots samples/            # Empirical demonstration plots
+│   │
+│   └── output plots samples/             # Empirical demonstration plots
 │       └── run_20260427_021150_seed42_metrics.png
 │
 └── foeglass2 kaggle.ipynb               # Kaggle GPU notebook for ASVspoof/RITW/WaveFake
-```
 
 ---
 
