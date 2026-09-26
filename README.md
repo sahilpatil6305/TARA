@@ -1,51 +1,69 @@
-# FoeGlass: Faithful Reproduction & DRAO Enhancement
+# TARA: TTS-Adversarial Realism Optimization
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-ee4c2c.svg)](https://pytorch.org/)
-[![Transformers](https://img.shields.io/badge/Transformers-HuggingFace-yellow.svg)](https://huggingface.co/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+**TARA** is a research framework for auditing audio deepfake detectors through
+feedback-driven text-to-speech optimization and for studying
+**Distribution-Regularized Adversarial Optimization (DRAO)**.
 
-An open-source, faithful reproduction and architectural enhancement of **FoeGlass** — an adversarial framework designed to audit and probe state-of-the-art neural speech deepfake detectors using feedback-driven text-to-speech (TTS) optimization and distributional alignment.
+The project reproduces a FoeGlass-style black-box adversarial audio
+optimization pipeline and extends it with distributional alignment,
+acoustic smoothness constraints, LLM-guided prompt mutation, and
+trajectory-aware optimization.
 
-This repository provides:
-1. **`foeglass/`**: Baseline reproduction of the core FoeGlass iterative prompt feedback pipeline.
-2. **`foeglass-DRAO/`**: An enhanced framework introducing **Distributional Realism Adversarial Optimization (DRAO)** via Maximum Mean Discrepancy (MMD) distribution alignment, spectral smoothness regularization, and LLM-guided prompt mutation (Groq/Ollama).
-3. **`foeglass2 kaggle.ipynb`**: Kaggle/Colab notebook optimized for GPU environments (e.g. dual Tesla T4s) with cross-dataset evaluation across ASVspoof 2019, In-the-Wild (RITW), and WaveFake.
-
----
-
-## Architecture Overview
-
-```
-                         +-----------------------------+
-                         |     Target Detector f(x)    |
-                         +--------------+--------------+
-                                        | (Detection Score / Logit)
-                                        v
-+-----------------------+     +------------------------+     +-----------------------+
-|  Real Audio Baseline  | --> |     DRAO Objective     | <-- |   Acoustic Features   |
-|   (Wav2Vec-2 / MMD)   |     |    Loss Formulation    |     | (Pitch, Energy, Spec) |
-+-----------------------+     +-----------+------------+     +-----------------------+
-                                          | (Feedback Vector)
-                                          v
-+-----------------------+     +------------------------+     +-----------------------+
-|   Synthesized Audio   | <-- |   TTS Audio Engine     | <-- |  LLM Prompt Mutator   |
-|         x_t           |     |     (Coqui TTS)        |     | (Groq / Llama / Rules)|
-+-----------------------+     +------------------------+     +-----------------------+
-```
-
-### Key Innovations in DRAO
-
-In the enhanced `foeglass-DRAO` formulation, prompts are not merely optimized against single-point detector misclassification, but guided by a multi-objective loss $J_t$:
-
-$$J_t = \alpha \cdot \Delta f_t + \beta \cdot f(x_t) - \lambda_{\text{mmd}} \cdot \text{MMD}^2(P_g, P_r) - \lambda_{\text{smooth}} \cdot \mathcal{L}_{\text{smooth}}$$
-
-- **Attack Gain ($\Delta f_t$) & Target Margin**: Rewards iterations that increase false acceptance while maintaining a safety margin against detector thresholds.
-- **Distributional Realism (MMD)**: Enforces that the rolling buffer of generated attack embeddings $P_g$ remains distributionally indistinguishable from genuine human speech embeddings $P_r$ under a Gaussian RBF kernel.
-- **Spectral Smoothness ($\mathcal{L}_{\text{smooth}}$)**: Penalizes high-frequency acoustic discontinuities and phase artifacts often left by naive TTS manipulations.
-- **Momentum Memory Bank**: Maintains top-$k$ performing prompts and scores to balance exploration vs. exploitation across search trajectories.
+> **Research project:** Audio Deepfake Detection, Adversarial Machine Learning,
+> LLM-Guided Optimization, Neural TTS, and Speech Representation Learning.
 
 ---
+
+## Overview
+
+Audio deepfake detectors are increasingly used to identify synthetic,
+converted, and manipulated speech. However, black-box adversarial systems
+can probe these detectors by iteratively generating speech and using detector
+feedback to guide subsequent generations.
+
+TARA investigates this optimization process and introduces **DRAO
+(Distribution-Regularized Adversarial Optimization)** to constrain the
+optimization trajectory using distributional and acoustic regularization.
+
+The system follows an iterative feedback loop:
+
+```text
+        LLM Prompt Generation / Mutation
+                    |
+                    v
+             Neural TTS Engine
+                    |
+                    v
+             Generated Speech
+                    |
+                    v
+          Speech Representation
+              (Wav2Vec2)
+                    |
+                    v
+          Target Deepfake Detector
+                    |
+          +---------+---------+
+          |                   |
+          v                   v
+    Detector Feedback     Realism Metrics
+                              |
+                 +------------+------------+
+                 |                         |
+                 v                         v
+          Distributional             Smoothness
+           Alignment                  Constraint
+                 \                         /
+                  \                       /
+                   +---------+-----------+
+                             |
+                             v
+                    DRAO Objective
+                             |
+                             v
+                    Prompt Mutation
+                             |
+                             +------> Next Iteration
 
 ## Repository Structure
 
