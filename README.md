@@ -65,6 +65,8 @@ The system follows an iterative feedback loop:
                              |
                              +------> Next Iteration
 
+```
+
 ## Repository Structure
 
 ```text
@@ -131,7 +133,7 @@ The system follows an iterative feedback loop:
 └── foeglass2 kaggle.ipynb               # Kaggle GPU notebook for ASVspoof/RITW/WaveFake
 
 ---
-
+```
 ## Getting Started
 
 ### 1. Prerequisites & Environment
